@@ -1,5 +1,11 @@
 #include "server.h"
 
+Sever::Sever() {
+}
+
+Sever::~Sever() {
+}
+
 int Sever::getPassivePort() {
     return m_passivePort;
 }
