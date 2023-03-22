@@ -27,6 +27,8 @@ add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 
+target_link_libraries(${PROJECT_NAME} PUBLIC wsock32 ws2_32)
+
 if(WIN32)
     target_compile_definitions(${PROJECT_NAME} PUBLIC WINDOWS)
 elseif(UNIX)

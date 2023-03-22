@@ -1,17 +1,14 @@
 #pragma once
-#pragma comment(lib, "Ws2_32.lib")
 
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <winsock2.h>
 
-#include<stdio.h>
-#include<iostream>
-#include<winsock2.h>
-#include<stdlib.h>
+class Client {
+public:
+    Client()  = default;
+    ~Client() = default;
 
-
-class Client{
-    public:
-        Client();
-        ~Client();
-
-        SOCKET creatSocket(SOCKADDR_IN & hostAddr, char * hostIP, char * hostPort);
+    SOCKET creatSocket(SOCKADDR_IN& hostAddr, char* hostIP, char* hostPort);
 };
