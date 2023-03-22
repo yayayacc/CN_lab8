@@ -50,7 +50,7 @@ void Sever::run(int severFd) {
     connections[0] = severFd;
 
     struct sockaddr_in newAddr;
-    socklen_t          newLen;
+    socklen_t          newLen = sizeof(struct sockaddr);
     // 循环工作
     while (true) {
         // 清理并且对readSet重新赋值
@@ -62,16 +62,20 @@ void Sever::run(int severFd) {
         }
 
         // 开始用select进行监听,num为每次监听到的个数
-        int num = select(MAX_CONNECTIONS + 1, &m_readSet, NULL, NULL, NULL);
+        int num = select(MAX_CONNECTIONS, &m_readSet, NULL, NULL, NULL);
         // select函数里面后面三个为NULL，代表对输入、异常不感兴趣，以及时间为无限等待
         if (num >= 0) {
             std::cout << num << " events  occur" << std::endl;
             // 如果是服务器fd则代表有新的连接请求
             if (FD_ISSET(severFd, &m_readSet)) {
                 std::cout << "a new connection occurs" << std::endl;
+
                 int newFd = accept(severFd, (struct sockaddr*)&newAddr, &newLen);
                 if (newFd >= 0) {
                     std::cout << "accept a new connection with fd " << newFd << std::endl;
+
+// exit(1);
+
                     for (int i = 0; i < MAX_CONNECTIONS; i++) { // 把第一个空闲的位置给新来的fd
                         if (connections[i] < 0) {
                             connections[i] = newFd;
@@ -92,7 +96,13 @@ void Sever::run(int severFd) {
             for (int i = 1; i < MAX_CONNECTIONS; i++) {
                 if (FD_ISSET(connections[i], &m_readSet) && (connections[i] > 0)) {
                     // int res = recv(connections[i], buffer, MAX_BUFFER, 0);
-                    processRecv();
+                    // processRecv();
+                    std::cout<<"fd :"<<connections[i]<<"has sth occurs"<<std::endl;
+                    if(read(connections[i], buffer, MAX_BUFFER) == 0){
+                        close(connections[i]);
+                        std::cout<<"delete fd:"<<connections[i]<<std::endl;
+                        connections[i] = -1;
+                    }
                 }
             }
             num--;

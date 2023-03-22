@@ -19,9 +19,13 @@ int main() {
     }
 
     Client client;
-    char*  hostIP   = "1.2.3.4"; // TODO:这一部分后面需要更改，可能需要改成NAT穿透
-    char*  hostPort = "6666";
+    char const*  hostIP   = "192.168.1.103"; // TODO:这一部分后面需要更改，可能需要改成NAT穿透
+    char const*  hostPort = "6666";
 
     windowsSocket = client.creatSocket(servADDR, hostIP, hostPort);
     // 到这一行就已经完成了套接字的创建，接下来就是链接目标主机进行登录的部分了。
+    connect(windowsSocket, (SOCKADDR*)&servADDR, sizeof(servADDR));
+    std::cout<<"successful!"<<std::endl;
+    Sleep(20000);
+    return 0;
 }
